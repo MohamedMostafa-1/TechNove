@@ -37,8 +37,8 @@ const Home = () => {
           {/* content  */}
       
           <p className='text-lg font-bold  text-white pr-[100px]   md:pr-[450px]'>New Arrivals</p>
-          <h1 className=' text-2xl md:text-3xl font-bold text-black pr-[90px]  md:pr-[360px] '>Smart Watch :</h1>
-            <p className='text-3xl md:text-5xl text-black font-bold pr-[50px]  md:pr-[200px] '>Your Life,Synced</p>
+          <h1 className=' text-2xl md:text-3xl font-bold text-black pr-[90px]  md:pr-[360px] '>Smart Watch </h1>
+            <p className='text-3xl md:text-4xl text-black font-bold pr-[50px]  md:pr-[260px] '>Your Life,Synced</p>
             <div className='  md:pr-[350px] pb-[10px] '>
             <Button className='bg-white  ' variant="contained"><span className='text-black font-semibold p-1 '> Explore Categories</span></Button>
             </div>
@@ -48,7 +48,7 @@ const Home = () => {
         {/* part left section */}
         <div className='w-[98%] md:w-[49%] flex flex-col gap-2 px-0 py-2 bg-red-500  rounded-[20px] '>
         {/* content  */}
-            <h1 className='text-4xl md:text-7xl font-bold text-outline pr-[50px] md:pr-[100px] '>smart Wacth:</h1>
+            <h1 className='text-4xl md:text-5xl font-bold text-outline pr-[50px] md:pr-[100px] '>Smart Headphones </h1>
             <p className='text-2xl md:text-4xl text-white font-bold pr-[50px] md:pr-[190px] '>Unleash Pure Sound</p>
             <div className='md:pr-[350px] '>
             <Button className='bg-white  ' variant="contained"><span className='text-red-600 font-semibold p-1 '> Shop Now</span></Button>
