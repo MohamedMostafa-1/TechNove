@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@mui/material/Button';
 import Heand from '../../assets/HandFree-removebg-preview (1).png'
 import Watched from '../../assets/watched-removebg-preview.png'
@@ -11,6 +11,17 @@ import game from '../../assets/game.jpeg'
 import HeadphonesIcon from '@mui/icons-material/Headphones';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 import { FaCreditCard } from "react-icons/fa6";
+import axios from 'axios';
+// import * as React from 'react';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import CardMedia from '@mui/material/CardMedia';
+import Typography from '@mui/material/Typography';
+// import Button from '@mui/material/Button';
+import CardActionArea from '@mui/material/CardActionArea';
+import CardActions from '@mui/material/CardActions';
+import { Link } from 'react-router';
+// import { data } from 'react-router';
 
 
 const devices = [
@@ -22,12 +33,42 @@ const devices = [
   { name: 'Video Game', src: game },
 ];
 
+ const categories = [
+  "smartphones", 
+  "laptops",
+  "tablets", 
+  "mobile-accessories"
+ ]
+
 
 const Home = () => {
+  const [products , setProducts]=  useState([])
+
+
+  useEffect(()=>{
+    const fetchdata = async()=>{
+     try {
+      const redults = await Promise.all(
+        categories.map(async(category)=>{
+          const res = await axios.get(`https://dummyjson.com/products/category/${category}`);
+          return {[category] :res.data.products}
+        })
+      )
+      const allproducts = Object.assign({}, ...redults)
+      setProducts(allproducts)
+     } catch (error) {
+      console.error("Error fetching products:", error);
+     }
+    }
+    fetchdata()
+  },[])
+
+  console.log(products);
+  
   return (
     
     <div>
-      <div className='mt-5 flex flex-col md:flex-row gap-3 justify-center items-center'>
+      <div className='mt-5 flex  flex-col md:flex-row gap-3 justify-center items-center'>
         {/* part right section */}
         <div className='   w-[98%] md:w-[49%] bg-blue-500 rounded-[20px] ' >
             {/* img */}
@@ -116,8 +157,57 @@ const Home = () => {
           </div>
           
         </div>
+               {/* ["smartphones", "laptops", "tablets", "mobile-accessories"].includes(p.category) */}
+          <div className='grid grid-cols-4  gap-3 justify-center items-center p-3'>
+            {Object.values(products).flat().slice(0, 8).map((product)=>(
+             <Card key={product.id} sx={{ maxWidth: 345 }}>
+              <CardActionArea component={Link} to={`/products/${product.id}`}>
+                
+                  <CardMedia
+                    component="img"
+                    height="140"
+                    image={product.images[0]}
+                    alt="green iguana"
+                  />
+                  <CardContent>
+                    <Typography gutterBottom variant="h5" className='text-start' component="div">
+                      {product.title}
+                    </Typography>
+                    <Typography variant="body2" className='text-start' sx={{ color: 'text.secondary' }}>
+                    {product.description}
+                    </Typography>
+                  </CardContent>
+                
+              </CardActionArea>
 
-      
+
+               <CardActions sx={{ justifyContent: "left", pb: 2 }}>
+                <Button
+                  variant="contained"
+                  size="medium"
+                  sx={{
+                    borderRadius: "9999px",
+                    px: 3,
+                    textTransform: "none",
+                    fontWeight: "bold",
+                    background:
+                      "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
+                    "&:hover": {
+                      background:
+                        "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+                    },
+                  }}
+                  
+                >
+                 <Link to={`/products/${product.id}`} className='no-underline   text-start text-white'>
+                 Show More 
+                 </Link>
+                </Button>
+              </CardActions>
+            </Card>          
+            ))}
+          </div>
+        
     </div>
     
   )

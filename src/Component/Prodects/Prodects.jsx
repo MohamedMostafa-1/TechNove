@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardContent,
@@ -10,39 +10,43 @@ import {
   Grid,
 } from "@mui/material";
 
-import Product from "../../assets/products/p-1.jpg";
-import Product1 from "../../assets/products/p-2.jpg";
-import Product2 from "../../assets/products/p-3.jpg";
-import Product3 from "../../assets/products/p-4.jpg";
-import Product4 from "../../assets/products/p-5.jpg";
-import Product6 from "../../assets/products/p-7.jpg";
-import Product7 from "../../assets/products/p-9.jpg";
-import Gaming from "../../assets/products/gaming.png";
-import Headphone from "../../assets/products/headphone.png";
-import Macbook from "../../assets/products/macbook.png";
-import Smartwatch from "../../assets/products/smartwatch2-removebg-preview.png";
-import Speaker from "../../assets/products/speaker.png";
-import VR from "../../assets/products/vr.png";
-import Watch from "../../assets/products/watch.png";
 
-const devices = [
-  { name: "Headphone", src: Product },
-  { name: "Watch", src: Product1 },
-  { name: "Headphone", src: Product2 },
-  { name: "Headphone", src: Product3 },
-  { name: "Headphone", src: Product4 },
-  { name: "Headphone", src: Product6 },
-  { name: "Headphone", src: Product7 },
-  { name: "Gaming", src: Gaming },
-  { name: "Headphone", src: Headphone },
-  { name: "Macbook", src: Macbook },
-  { name: "Smartwatch", src: Smartwatch },
-  { name: "Speaker", src: Speaker },
-  { name: "VR", src: VR },
-  { name: "Watch", src: Watch },
-];
+import axios from "axios";
+import { Link } from "react-router";
+
+
+ const categories = [
+  "smartphones", 
+  "laptops",
+  "tablets", 
+  "mobile-accessories"
+ ]
 
 const Products = () => {
+  const [products , setProducts]= useState([])
+
+  useEffect(()=>{
+    const fetchdata = async ()=>{
+      try {
+        const result = await Promise.all(
+          categories.map(async(category)=>{
+            const res = await axios.get(`https://dummyjson.com/products/category/${category}`)
+            return {[category] : res.data.products}
+          })
+        )
+
+        const allproducts = Object.assign({}, ...result)
+        setProducts(allproducts)
+      } catch (error) {
+       console.error("Error fetching products:", error);
+        
+      }
+    }
+
+    fetchdata()
+  },[])
+  console.log(products);
+  
   return (
     <div className="px-4 py-10">
       {/* Section Title */}
@@ -51,8 +55,8 @@ const Products = () => {
       </h1>
 
       {/* Grid of Products */}
-      <Grid container spacing={4}>
-        {[...devices, ...devices].map((device, index) => (
+     <Grid container spacing={4}>
+        {Object.values(products).flat().map((product, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
             <Card
               sx={{
@@ -70,13 +74,13 @@ const Products = () => {
                 },
               }}
             >
-              <CardActionArea>
+              <CardActionArea component={Link} to={`/products/${product.id}`}>
                 {/* Product Image */}
                 <CardMedia
                   component="img"
                   height="200"
-                  image={device.src}
-                  alt={device.name}
+                  image={product.images[0]}   // ✅ بدل image
+                  alt={product.title}        // ✅ بدل name
                   className="zoom-img"
                   sx={{
                     transition: "transform 0.6s ease",
@@ -95,8 +99,9 @@ const Products = () => {
                       color: "text.primary",
                       textAlign: "center",
                     }}
+                    className="text-start"
                   >
-                    {device.name}
+                    {product.title}
                   </Typography>
                   <Typography
                     variant="body2"
@@ -105,9 +110,9 @@ const Products = () => {
                       textAlign: "center",
                       fontSize: "0.9rem",
                     }}
+                    className="text-start"
                   >
-                    High quality modern devices with superior performance,
-                    stylish design, and durability.
+                    {product.description}
                   </Typography>
                 </CardContent>
               </CardActionArea>
@@ -120,7 +125,7 @@ const Products = () => {
                   sx={{
                     borderRadius: "9999px",
                     px: 3,
-                    textTransform: "none",
+                    textTransform: "nِone",
                     fontWeight: "bold",
                     background:
                       "linear-gradient(135deg, #3b82f6 0%, #2563eb 100%)",
@@ -137,6 +142,7 @@ const Products = () => {
           </Grid>
         ))}
       </Grid>
+
     </div>
   );
 };

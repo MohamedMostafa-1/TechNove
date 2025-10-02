@@ -1,21 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import Logo from '../../assets/Logo-removebg-preview.png'
 import { CiUser } from "react-icons/ci";
 import { CiHeart } from "react-icons/ci";
 import { HiOutlineShoppingBag } from "react-icons/hi";
 import { FaBars, FaTimes } from 'react-icons/fa';
+import { BsMoon, BsSun } from "react-icons/bs";
+import { useTheme } from '@mui/material';
 
-const NavBar = () => {
+
+const NavBar = ({ setDarkMode ,darkMode}) => {
 
    const [menuOpen,setmenuopen] = useState(false);
+   const theme = useTheme()
 
   const toggleMenu = () => {
     setmenuopen(!menuOpen);
   };
 
+  useEffect(() => {
+  if (darkMode === "dark") {
+    document.documentElement.classList.add("dark");
+  } else {
+    document.documentElement.classList.remove("dark");
+  }
+}, [darkMode]);
+
+
   return (
-    <div className='w-full bg-slate-50 shadow-md fixed top-0 left-0 z-40 '>
+    <div className='w-full bg-slate-50 dark:bg-slate-900 shadow-gray-200 dark:shadow-black shadow-md fixed top-0 left-0 z-40 transition-colors duration-300'>
       <div className='flex justify-between items-center p-1'>
         {/* logo */}
         <div className=' font-bold text-xl flex items-center'>
@@ -31,11 +44,21 @@ const NavBar = () => {
           </ul>
         </div>
         {/* icons */}
-        <div className='text-white'>
-          <ul className=' hidden md:flex  gap-3 pr-5 text-center text-black '>
-          <CiUser  size={20} />
-          <CiHeart  size={20}/>
-          <HiOutlineShoppingBag size={20} />
+        <div >
+          <ul className=' hidden md:flex  gap-3 pr-5 text-center '>
+          <CiUser  className=' ' size={20} />
+          <CiHeart className=' '  size={20}/>
+          <HiOutlineShoppingBag className=' ' size={20} />
+           <button onClick={()=>{
+            localStorage.setItem("currentMode" , theme.palette.mode === "light" ? "dark":"light")
+            setDarkMode(
+              theme.palette.mode === "light" ? "dark":"light"
+            )
+           }}
+            className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+           >
+             {theme.palette.mode === "light" ? <BsMoon  size={20} /> :<BsSun  size={20} /> }
+           </button>
           </ul>
         </div>
          {/* ------Responsive-icon ------ */}
@@ -60,6 +83,17 @@ const NavBar = () => {
                   <CiUser  size={20} />
                   <CiHeart  size={20}/>
                   <HiOutlineShoppingBag size={20} />
+                    <button
+                      onClick={() => {
+                        setDarkMode(
+                          theme.palette.mode === "light" ? "dark":"light"
+                        )
+                        toggleMenu();
+                      }}
+                      className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 transition"
+                    >
+                      {theme.palette.mode === "light" ? <BsMoon  size={20} /> :<BsSun  size={20} /> }
+                    </button>
                 </ul>
               </div>
         )}
