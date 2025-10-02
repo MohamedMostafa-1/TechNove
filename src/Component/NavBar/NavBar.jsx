@@ -85,6 +85,7 @@ const NavBar = ({ setDarkMode ,darkMode}) => {
                   <HiOutlineShoppingBag size={20} />
                     <button
                       onClick={() => {
+                        localStorage.setItem("currentMode" , theme.palette.mode === "light" ? "dark":"light")
                         setDarkMode(
                           theme.palette.mode === "light" ? "dark":"light"
                         )
